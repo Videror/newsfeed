@@ -28,9 +28,14 @@
     const feed = document.getElementById("feed");
 
     function formatDate(iso) {
-      return new Date(iso).toLocaleDateString("en-GB", {
+      const d = new Date(iso);
+      const date = d.toLocaleDateString("en-GB", {
         day: "numeric", month: "long", year: "numeric"
       });
+      // Older posts may only have a date, no time
+      if (!iso.includes("T")) return date;
+      const time = d.toLocaleTimeString("en-GB", { hour: "2-digit", minute: "2-digit" });
+      return date + ", " + time;
     }
 
     function render(posts) {

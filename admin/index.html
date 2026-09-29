@@ -9,5 +9,39 @@
 <body>
   <!-- Decap CMS: builds the whole admin interface from config.yml -->
   <script src="https://unpkg.com/decap-cms@^3.0.0/dist/decap-cms.js"></script>
+ 
+  <script>
+    // Custom "autodate" widget: fills in the current date and time when a
+    // new post is created, and shows it as read-only text.
+    function show(value) {
+      return value ? new Date(value).toLocaleString("en-GB") : "";
+    }
+ 
+    var AutoDateControl = createClass({
+      componentDidMount: function () {
+        if (!this.props.value) {
+          this.props.onChange(new Date().toISOString());
+        }
+      },
+      render: function () {
+        return h("input", {
+          id: this.props.forID,
+          className: this.props.classNameWrapper,
+          type: "text",
+          readOnly: true,
+          value: show(this.props.value),
+          style: { opacity: 0.7, cursor: "not-allowed" }
+        });
+      }
+    });
+ 
+    var AutoDatePreview = createClass({
+      render: function () {
+        return h("div", null, show(this.props.value));
+      }
+    });
+ 
+    CMS.registerWidget("autodate", AutoDateControl, AutoDatePreview);
+  </script>
 </body>
 </html>
