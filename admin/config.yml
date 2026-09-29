@@ -1,0 +1,31 @@
+# Where the content is saved. Every "Publish" becomes a commit in this repo.
+backend:
+  name: github
+  repo: YOUR-GITHUB-USERNAME/YOUR-REPO-NAME   # <- change this
+  branch: main
+ 
+# Lets you test locally without GitHub login (see notes below).
+local_backend: true
+ 
+# Uploaded images go here (for later, if you add images to posts).
+media_folder: images
+public_folder: /images
+ 
+collections:
+  - name: site
+    label: Site content
+    files:
+      - name: news
+        label: News feed
+        file: news.json          # path relative to the repo root
+        format: json
+        fields:
+          - label: Posts
+            name: posts
+            widget: list
+            label_singular: post
+            summary: "{{fields.date}} – {{fields.title}}"
+            fields:
+              - { label: Date,  name: date,  widget: datetime, date_format: "YYYY-MM-DD", time_format: false, format: "YYYY-MM-DD" }
+              - { label: Title, name: title, widget: string }
+              - { label: Text,  name: body,  widget: text }

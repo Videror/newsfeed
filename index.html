@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Nordvik Notes – Local news</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header class="site-header">
+    <h1>Nordvik Notes</h1>
+    <p>News from the harbour town (all of it made up)</p>
+  </header>
+
+  <main>
+    <div id="feed" class="feed" aria-live="polite">
+      <p class="status">Loading news…</p>
+    </div>
+  </main>
+
+  <footer class="site-footer">
+    <p>The page layout lives in this file. The news lives in <code>news.json</code>.</p>
+  </footer>
+
+  <script>
+    // 1. Fetch the content (this is the part a customer edits, not this code)
+    // 2. Turn each item into HTML
+    const feed = document.getElementById("feed");
+
+    function formatDate(iso) {
+      return new Date(iso).toLocaleDateString("en-GB", {
+        day: "numeric", month: "long", year: "numeric"
+      });
+    }
+
+    function render(posts) {
+      // Newest first
+      posts.sort((a, b) => new Date(b.date) - new Date(a.date));
+
+      feed.innerHTML = "";
+      for (const post of posts) {
+        const article = document.createElement("article");
+        article.className = "post";
+
+        const time = document.createElement("time");
+        time.dateTime = post.date;
+        time.textContent = formatDate(post.date);
+
+        const title = document.createElement("h2");
+        title.textContent = post.title;
+
+        const body = document.createElement("p");
+        body.textContent = post.body;
+
+        article.append(time, title, body);
+        feed.append(article);
+      }
+    }
+
+    fetch("news.json")
+      .then(res => {
+        if (!res.ok) throw new Error(res.status);
+        return res.json();
+      })
+      .then(data => render(data.posts))
+      .catch(() => {
+        feed.innerHTML =
+          '<p class="status">Could not load news.json. ' +
+          'If you opened this file directly, run a local server instead (see notes).</p>';
+      });
+  </script>
+</body>
+</html>
