@@ -1,7 +1,7 @@
 # Where the content is saved. Every "Publish" becomes a commit in this repo.
 backend:
-  name: github
-  repo: videror/newsfeed   # <- change this
+  name: turbo-github
+  turbo_site_id: 62376cf6-e78c-4b70-8443-07ff6117fe73
   branch: main
  
 # Lets you test locally without GitHub login (see notes below).
